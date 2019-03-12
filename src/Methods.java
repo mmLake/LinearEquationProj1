@@ -79,21 +79,17 @@ public class Methods {
     private static int getPivotIdx(Fraction[][] matrixVals, int i, Fraction[] maxVals, List<Integer> availableIdx){
         Fraction maxPivotVal = new Fraction(1, 1000);
         Fraction tempPivotVal;
-        int rowIdx = 0;
         int pivotIdx = -1;
         Fraction[] row;
 
-        for (int idx=0; idx < matrixVals.length; idx++){
-            if (availableIdx.contains(idx)) {
-                row = matrixVals[idx];
+        for (int idx : availableIdx){
+            row = matrixVals[idx];
 
-                tempPivotVal = row[i].divide(maxVals[rowIdx]);
+            tempPivotVal = row[i].divide(maxVals[idx]);
 
-                if (tempPivotVal.absIsGreater(maxPivotVal)) {
-                    maxPivotVal = tempPivotVal;
-                    pivotIdx = rowIdx;
-                }
-                rowIdx++;
+            if (tempPivotVal.absIsGreater(maxPivotVal)) {
+                maxPivotVal = tempPivotVal;
+                pivotIdx = idx;
             }
         }
 

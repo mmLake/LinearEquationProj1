@@ -23,8 +23,6 @@ public class MatrixController {
         Fraction[] finalAns = new Fraction[matrixVals.length];
         int bIdx = matrixVals.length;
 
-        Arrays.setAll(finalAns, i -> 0);
-
         for (int row=0; row < matrixVals.length; row++){
             b = matrixVals[row][bIdx];
 
@@ -34,6 +32,7 @@ public class MatrixController {
             }
 
             b = b.divide(matrixVals[row][col]);
+
             finalAns[row] = b;
         }
 
