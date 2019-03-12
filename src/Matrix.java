@@ -5,31 +5,24 @@ import java.util.ArrayList;
  */
 public class Matrix {
     private int numRows;
-    private ArrayList<ArrayList<Double>> coefficients = new ArrayList<>();
+    private double[][] coefficients;
 
-    private int[] finalVals;
-
-    public Matrix(ArrayList<ArrayList<Double>> coefficients){
+    public Matrix(double[][] coefficients){
+        numRows = coefficients.length;
         this.coefficients = coefficients;
-        numRows = coefficients.size();
-
-        finalVals = new int[numRows];
     }
 
     public int getNumRows() {
         return numRows;
     }
 
-    public ArrayList<ArrayList<Double>> getCoefficients() {
+    public double[][] getCoefficients() {
         return coefficients;
     }
 
-    public int[] getFinalVals() {
-        return finalVals;
+    public void setCoefficients(double[][] coefficients) {
+        this.coefficients = coefficients;
     }
-
-    public void setFinalVals(int[] finalVals) {
-        this.finalVals = finalVals;
-    }
-
 }
+
+
