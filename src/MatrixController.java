@@ -15,12 +15,12 @@ public class MatrixController {
     *
     * final ans [W .. Y, Z]
     */
-    public static void computeFinalVals(double[][] matrixVals){
-        double b;
+    public static void computeFinalVals(Fraction[][] matrixVals){
+        Fraction b;
         int col;
         int finalAnsIdx;
 
-        double[] finalAns = new double[matrixVals.length];
+        Fraction[] finalAns = new Fraction[matrixVals.length];
         int bIdx = matrixVals.length;
 
         Arrays.setAll(finalAns, i -> 0);
@@ -29,10 +29,11 @@ public class MatrixController {
             b = matrixVals[row][bIdx];
 
             for (col= bIdx-1, finalAnsIdx =0; col >= 0 && col > bIdx-1-row; col--, finalAnsIdx++){
-                b -= (finalAns[finalAnsIdx] * matrixVals[row][col]);
+//                b -= (finalAns[finalAnsIdx] * matrixVals[row][col]);
+                b = b.subtract(finalAns[finalAnsIdx].multiply(matrixVals[row][col]));
             }
 
-            b = Math.round(b/matrixVals[row][col]);
+            b = b.divide(matrixVals[row][col]);
             finalAns[row] = b;
         }
 

@@ -3,21 +3,24 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by mayalake on 3/10/19.
  */
 public class View {
 
+    private static Scanner sc = new Scanner(System.in);
+
     public static Matrix readFile(){
         FileReader fr;
         BufferedReader br;
         String val;
         String strRow[];
-        ArrayList<Double> row;
-        double[][] matrixVals;
+        ArrayList<Integer> row;
+        Fraction[][] matrixVals;
 
-        ArrayList<ArrayList<Double>> coefficients = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> coefficients = new ArrayList<>();
 
         try {
             fr = new FileReader("./src/input");
@@ -28,25 +31,21 @@ public class View {
 
                 strRow = val.split(" ");
                 for (String s : strRow){
-                    row.add(Double.parseDouble(s));
+                    row.add(Integer.parseInt(s));
                 }
 
                 coefficients.add(row);
             }
 
-            matrixVals = new double[coefficients.size()][coefficients.get(0).size()];
-
+            matrixVals = new Fraction[coefficients.size()][coefficients.get(0).size()];
 
             for (int rowIdx=0; rowIdx < matrixVals.length; rowIdx++){
                 for (int colIdx = 0; colIdx < matrixVals[0].length; colIdx++){
-                    matrixVals[rowIdx][colIdx] = coefficients.get(rowIdx).get(colIdx);
+                    matrixVals[rowIdx][colIdx] = new Fraction(coefficients.get(rowIdx).get(colIdx),1);
                 }
             }
 
             return new Matrix(matrixVals);
-
-//            return new Matrix(coefficients.stream()
-//                    .map(u -> u.toArray(new Double[0])).toArray(double[][]::new));
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }catch (IOException e){
@@ -56,7 +55,34 @@ public class View {
         return null;
     }
 
-    public void getInput(){
+    public void getCLInput(){
+        int numEq;
+
+        System.out.print("Enter the number of equations: ");
+        while (!sc.hasNextInt()){
+            System.out.printf("\nMust enter an integer value: ");
+        }
+        numEq = sc.nextInt();
+    }
+
+    public static void menu(){
+        int option;
+
+        System.out.print("Enter the input option: ");
+        while (!sc.hasNextInt() || sc.nextInt() < 1 || sc.nextInt() > 3){
+            System.out.printf("\nMust enter values between 1 and 3: ");
+            sc.next();
+        }
+        option = sc.nextInt();
+
+        switch (option){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+        }
 
     }
 

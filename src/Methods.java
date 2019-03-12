@@ -1,5 +1,7 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by mayalake on 3/10/19.
@@ -7,22 +9,25 @@ import java.util.Arrays;
 public class Methods {
 
     public static void gaussElimPartialPivot(Matrix matrix) {
+        List<Integer> availableIdx;
         int pivotIdx;
 
-        double[][] matrixVals = matrix.getCoefficients();
-        double[][] finalMatrixVals = new double[matrix.getNumRows()][matrix.getNumRows()];
-        int[] finalVals = new int[matrix.getNumRows()];
-        int[] maxVals = new int[matrix.getNumRows()];
+        Fraction[][] matrixVals = matrix.getCoefficients();
+        Fraction[] maxVals = new Fraction[matrix.getNumRows()];
 
-        //initialize
-        int rowIdx = 0;
-        Arrays.setAll(maxVals, i -> Integer.MIN_VALUE);
+        Arrays.setAll(maxVals, i -> new Fraction(Integer.MIN_VALUE, 1));
+        availableIdx = IntStream.range(0, matrix.getNumRows()).boxed().collect(Collectors.toList());
 
         //find largest value in each row & populate maxVals
-        for (double[] row : matrixVals){
-            for (double val : row){
-                if (Math.abs(val) > maxVals[rowIdx])
-                    maxVals[rowIdx] = (int) Math.abs(val);
+        int rowIdx = 0;
+        Fraction val;
+
+        for (Fraction[] row : matrixVals){
+            for (int i=0; i < matrixVals.length; i++){
+                val = row[i];
+
+                if (val.absIsGreater(maxVals[rowIdx]))
+                    maxVals[rowIdx] = val;
             }
             rowIdx++;
         }
@@ -30,33 +35,40 @@ public class Methods {
         //run algorithm
         for (int i = 0; i < matrix.getNumRows(); i++) {
             //get pivot row
-            pivotIdx = getPivotIdx(matrixVals, i, maxVals);
+            pivotIdx = getPivotIdx(matrixVals, i, maxVals, availableIdx);
 
-            maxVals[pivotIdx] = Integer.MIN_VALUE;
+            availableIdx.remove((Integer) pivotIdx);
 
-            //save pivot row
-            finalMatrixVals[matrix.getNumRows()-1-i] = matrixVals[pivotIdx];
+            System.out.println("pivot " + pivotIdx);
 
             //update matrix based on pivot
-            matrixVals = updateMatrix(matrixVals, pivotIdx, i);
+            matrixVals = updateMatrix(matrixVals, pivotIdx, i, availableIdx);
+
+            for (int j=0; j< matrix.getNumRows(); j++){
+                for (int k=0; k < matrix.getNumCols(); k++){
+                    System.out.printf("%10s",matrixVals[j][k].toString());
+                }
+                System.out.println();
+            }
+            System.out.println();
         }
 
-        matrix.setCoefficients(finalMatrixVals);
+        matrix.setCoefficients(matrixVals);
     }
 
-    private static double[][] updateMatrix(double[][] matrixVals, int pivotIdx, int i){
-        double multiplier;
-        double[] row;
+    private static Fraction[][] updateMatrix(Fraction[][] matrixVals, int pivotIdx, int i, List<Integer> availableIdx){
+        Fraction multiplier;
+        Fraction[] row;
 
-        double[] pivotRow = matrixVals[pivotIdx];
+        Fraction[] pivotRow = matrixVals[pivotIdx];
 
         for (int rowIdx=0; rowIdx < matrixVals.length; rowIdx++){
-            if (rowIdx != pivotIdx){
+            if (availableIdx.contains(rowIdx)){
                 row = matrixVals[rowIdx];
-                multiplier = -(row[i]/pivotRow[i]);
+                multiplier = row[i].divide(pivotRow[i]).multiply(new Fraction(-1, 1));
 
-                for (int colIdx=rowIdx; colIdx < matrixVals.length; colIdx++){
-                    row[colIdx] = multiplier * pivotRow[colIdx] + row[colIdx];
+                for (int colIdx=0; colIdx < matrixVals[0].length; colIdx++){
+                    row[colIdx] = (multiplier.multiply(pivotRow[colIdx])).add(row[colIdx]);
                 }
             }
         }
@@ -64,20 +76,25 @@ public class Methods {
         return matrixVals;
     }
 
-    private static int getPivotIdx(double[][] matrixVals, int i, int[] maxVals){
-        double maxPivotVal = -1;
-        double tempPivotVal;
+    private static int getPivotIdx(Fraction[][] matrixVals, int i, Fraction[] maxVals, List<Integer> availableIdx){
+        Fraction maxPivotVal = new Fraction(1, 1000);
+        Fraction tempPivotVal;
         int rowIdx = 0;
         int pivotIdx = -1;
+        Fraction[] row;
 
-        for (double[] row : matrixVals){
-            tempPivotVal = row[i]/ maxVals[rowIdx];
+        for (int idx=0; idx < matrixVals.length; idx++){
+            if (availableIdx.contains(idx)) {
+                row = matrixVals[idx];
 
-            if (tempPivotVal > maxPivotVal) {
-                maxPivotVal = tempPivotVal;
-                pivotIdx = rowIdx;
+                tempPivotVal = row[i].divide(maxVals[rowIdx]);
+
+                if (tempPivotVal.absIsGreater(maxPivotVal)) {
+                    maxPivotVal = tempPivotVal;
+                    pivotIdx = rowIdx;
+                }
+                rowIdx++;
             }
-            rowIdx++;
         }
 
         return pivotIdx;

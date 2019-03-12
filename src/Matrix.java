@@ -5,10 +5,12 @@ import java.util.ArrayList;
  */
 public class Matrix {
     private int numRows;
-    private double[][] coefficients;
+    private int numCols;
+    private Fraction[][] coefficients;
 
-    public Matrix(double[][] coefficients){
+    public Matrix(Fraction[][] coefficients){
         numRows = coefficients.length;
+        numCols = coefficients[0].length;
         this.coefficients = coefficients;
     }
 
@@ -16,11 +18,13 @@ public class Matrix {
         return numRows;
     }
 
-    public double[][] getCoefficients() {
+    public int getNumCols() { return numCols; }
+
+    public Fraction[][] getCoefficients() {
         return coefficients;
     }
 
-    public void setCoefficients(double[][] coefficients) {
+    public void setCoefficients(Fraction[][] coefficients) {
         this.coefficients = coefficients;
     }
 }
