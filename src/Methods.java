@@ -12,6 +12,7 @@ public class Methods {
         List<Integer> availableIdx;
         int pivotIdx;
 
+        int[] idxOrder = new int[matrix.getNumRows()];
         Fraction[][] matrixVals = matrix.getCoefficients();
         Fraction[] maxVals = new Fraction[matrix.getNumRows()];
 
@@ -36,8 +37,8 @@ public class Methods {
         for (int i = 0; i < matrix.getNumRows(); i++) {
             //get pivot row
             pivotIdx = getPivotIdx(matrixVals, i, maxVals, availableIdx);
-
             availableIdx.remove((Integer) pivotIdx);
+            idxOrder[i] = pivotIdx;
 
             System.out.println("pivot " + pivotIdx);
 
@@ -54,6 +55,7 @@ public class Methods {
         }
 
         matrix.setCoefficients(matrixVals);
+        matrix.setIdxOrder(idxOrder);
     }
 
     private static Fraction[][] updateMatrix(Fraction[][] matrixVals, int pivotIdx, int i, List<Integer> availableIdx){

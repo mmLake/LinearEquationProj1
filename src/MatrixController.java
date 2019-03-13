@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -6,34 +7,33 @@ import java.util.HashMap;
  */
 public class MatrixController {
 
-    /*assume that matrix is in form matrixVals[row][col]:
-    * W ..Y Z b
-    * 0 ..Y Z b
-    * .
-    * .
-    * 0 ..0 Z b
-    *
-    * final ans [W .. Y, Z]
-    */
-    public static void computeFinalVals(Fraction[][] matrixVals){
+    public static void computeFinalVals(Matrix matrix){
+        int rowIdx;
+        int colIdx;
         Fraction b;
-        int col;
-        int finalAnsIdx;
 
-        Fraction[] finalAns = new Fraction[matrixVals.length];
+        Fraction[] finalAns = new Fraction[matrix.getNumRows()];
+
+        Fraction[][] matrixVals = matrix.getCoefficients();
+        int[] idxOrder = matrix.getIdxOrder();
         int bIdx = matrixVals.length;
 
-        for (int row=0; row < matrixVals.length; row++){
-            b = matrixVals[row][bIdx];
+        for (int i = idxOrder.length-1; i >= 0; i--){
+            rowIdx = idxOrder[i];
+            b = matrixVals[rowIdx][bIdx];
 
-            for (col= bIdx-1, finalAnsIdx =0; col >= 0 && col > bIdx-1-row; col--, finalAnsIdx++){
-//                b -= (finalAns[finalAnsIdx] * matrixVals[row][col]);
-                b = b.subtract(finalAns[finalAnsIdx].multiply(matrixVals[row][col]));
+            colIdx = matrix.getNumRows()-1;
+
+            while (colIdx > i){
+                if (matrixVals[rowIdx][colIdx].numerator != 0 && matrixVals[rowIdx][colIdx].denominator != 0){
+                    b = b.subtract(finalAns[colIdx].multiply(matrixVals[rowIdx][colIdx]));
+                }
+                colIdx--;
             }
 
-            b = b.divide(matrixVals[row][col]);
+            b = b.divide(matrixVals[rowIdx][colIdx]);
 
-            finalAns[row] = b;
+            finalAns[i] = b;
         }
 
         System.out.println(Arrays.toString(finalAns));

@@ -8,7 +8,7 @@ public class Main {
 	// write your code here
         Matrix m = View.readFile();
         Methods.gaussElimPartialPivot(m);
-        MatrixController.computeFinalVals(m.getCoefficients());
+        MatrixController.computeFinalVals(m);
     }
 
     private static void menuOptions(){
