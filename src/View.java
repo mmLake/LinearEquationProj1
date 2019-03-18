@@ -87,11 +87,9 @@ public class View {
 
         System.out.println("Enter each row one line at a time. Row should have each integer or double separated by a space and include b val.");
         for (int rowIdx=0; rowIdx < numEq; rowIdx++){
-            System.out.print("Enter row " + rowIdx);
+            System.out.print("Enter row " + rowIdx + ": ");
 
             val = sc.nextLine();
-            System.out.println(val);
-
 
             strRow = val.split(" ");
             for (int colIdx=0; colIdx < matrixVals[0].length; colIdx++){
