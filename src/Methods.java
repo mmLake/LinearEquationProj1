@@ -140,7 +140,6 @@ public class Methods {
 
     public static void gaussSeidel(double[][] matrixVals, int max){
         double[] currentVals = new double[matrixVals.length];
-        double[] tempCurrentVals = new double[matrixVals.length];
         double[] bVals = new double[matrixVals.length];
         double[] divVals = new double[matrixVals.length];
 
@@ -161,16 +160,15 @@ public class Methods {
         //run algorithm
         while (max >=0){
             for (int rowIdx=0; rowIdx<matrixVals.length; rowIdx++){
-                tempCurrentVals[rowIdx] = bVals[rowIdx];
+                currentVals[rowIdx] = bVals[rowIdx];
 
                 for (int colIdx=0; colIdx<matrixVals.length; colIdx++){
                     if (colIdx != rowIdx){
-                        tempCurrentVals[rowIdx] -= (matrixVals[rowIdx][colIdx]*currentVals[colIdx]);
+                        currentVals[rowIdx] -= (matrixVals[rowIdx][colIdx]*currentVals[colIdx]);
                     }
                 }
 
-                tempCurrentVals[rowIdx] /= divVals[rowIdx];
-                currentVals = tempCurrentVals;
+                currentVals[rowIdx] /= divVals[rowIdx];
             }
 
             max--;
@@ -197,18 +195,5 @@ public class Methods {
             diagonallyDominant[colIdx] = matrix[tempMaxIdx];
         }
         return diagonallyDominant;
-    }
-
-//    private static boolean isUniqueSolution(double[][] matrixVals){
-//        for (int i =0; i<matrixVals.length; i++){
-//            if (matrixVals[i][i] == 0){
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
-    public static void gaussSeidel(){
-
     }
 }
