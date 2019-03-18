@@ -98,9 +98,115 @@ public class Methods {
         return pivotIdx;
     }
 
-    public static void jacobiIterative(){
+    public static void jacobiIterative(double[][] matrixVals, int max){
+        double[] currentVals = new double[matrixVals.length];
+        double[] tempCurrentVals = new double[matrixVals.length];
+        double[] bVals = new double[matrixVals.length];
+        double[] divVals = new double[matrixVals.length];
 
+        //start with solution (0,0,...0)
+        Arrays.setAll(currentVals, i -> 0);
+
+        //put matrix in diagonally dominant state
+        matrixVals = diagonallyDominant(matrixVals);
+
+        //set all bVals
+        for (int i=0; i< matrixVals.length; i++)
+            bVals[i] = matrixVals[i][matrixVals.length];
+
+        //set all dividing vals
+        for (int i=0; i< matrixVals.length; i++)
+            divVals[i] = matrixVals[i][i];
+
+        //run algorithm
+        while (max >=0){
+            for (int rowIdx=0; rowIdx<matrixVals.length; rowIdx++){
+                tempCurrentVals[rowIdx] = bVals[rowIdx];
+
+                for (int colIdx=0; colIdx<matrixVals.length; colIdx++){
+                    if (colIdx != rowIdx){
+                        tempCurrentVals[rowIdx] -= (matrixVals[rowIdx][colIdx]*currentVals[colIdx]);
+                    }
+                }
+
+                tempCurrentVals[rowIdx] /= divVals[rowIdx];
+            }
+            currentVals = Arrays.copyOf(tempCurrentVals, tempCurrentVals.length);
+
+            max--;
+            System.out.println(Arrays.toString(currentVals));
+        }
     }
+
+    public static void gaussSeidel(double[][] matrixVals, int max){
+        double[] currentVals = new double[matrixVals.length];
+        double[] tempCurrentVals = new double[matrixVals.length];
+        double[] bVals = new double[matrixVals.length];
+        double[] divVals = new double[matrixVals.length];
+
+        //start with solution (0,0,...0)
+        Arrays.setAll(currentVals, i -> 0);
+
+        //put matrix in diagonally dominant state
+        matrixVals = diagonallyDominant(matrixVals);
+
+        //set all bVals
+        for (int i=0; i< matrixVals.length; i++)
+            bVals[i] = matrixVals[i][matrixVals.length];
+
+        //set all dividing vals
+        for (int i=0; i< matrixVals.length; i++)
+            divVals[i] = matrixVals[i][i];
+
+        //run algorithm
+        while (max >=0){
+            for (int rowIdx=0; rowIdx<matrixVals.length; rowIdx++){
+                tempCurrentVals[rowIdx] = bVals[rowIdx];
+
+                for (int colIdx=0; colIdx<matrixVals.length; colIdx++){
+                    if (colIdx != rowIdx){
+                        tempCurrentVals[rowIdx] -= (matrixVals[rowIdx][colIdx]*currentVals[colIdx]);
+                    }
+                }
+
+                tempCurrentVals[rowIdx] /= divVals[rowIdx];
+                currentVals = tempCurrentVals;
+            }
+
+            max--;
+            System.out.println(Arrays.toString(currentVals));
+        }
+    }
+
+    private static double[][] diagonallyDominant(double[][] matrix){
+        double[][] diagonallyDominant = new double[matrix.length][matrix[0].length];
+        double tempMax;
+        int tempMaxIdx = -1;
+
+        HashMap<Integer, Boolean> usedIdx = new HashMap<>();
+
+        for (int colIdx=0; colIdx<matrix.length; colIdx++){
+            tempMax = Integer.MIN_VALUE;
+            for (int rowIdx=0; rowIdx<matrix.length; rowIdx++){
+                if (tempMax < matrix[rowIdx][colIdx] && !usedIdx.containsKey(rowIdx)){
+                    tempMax = matrix[rowIdx][colIdx];
+                    tempMaxIdx = rowIdx;
+                }
+            }
+            usedIdx.put(tempMaxIdx, false);
+            diagonallyDominant[colIdx] = matrix[tempMaxIdx];
+        }
+        return diagonallyDominant;
+    }
+
+//    private static boolean isUniqueSolution(double[][] matrixVals){
+//        for (int i =0; i<matrixVals.length; i++){
+//            if (matrixVals[i][i] == 0){
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     public static void gaussSeidel(){
 

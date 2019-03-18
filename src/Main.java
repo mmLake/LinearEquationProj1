@@ -6,9 +6,13 @@ public class Main {
 
 
 	// write your code here
-        Matrix m = View.readFile();
-        Methods.gaussElimPartialPivot(m);
-        MatrixController.computeFinalVals(m);
+//        Matrix m = View.readFile();
+//        Methods.gaussElimPartialPivot(m);
+//        MatrixController.computeFinalVals(m);
+        double[][] m = View.readDoubleFile();
+
+//        Methods.gaussSeidel(m, 3);
+        Methods.jacobiIterative(m, 3);
     }
 
     private static void menuOptions(){

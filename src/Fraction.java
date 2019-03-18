@@ -110,16 +110,6 @@ public class Fraction {
         return new Fraction(newNumerator, newDenominator);
     }
 
-    public boolean isGreater(Fraction fractionTwo){
-        //equal values
-        if (this.numerator * fractionTwo.denominator == this.denominator * fractionTwo.numerator)
-            return false;
-        //greater than
-        if (this.numerator * fractionTwo.denominator > this.denominator * fractionTwo.numerator)
-            return true;
-        else
-            return false;
-    }
 
     public boolean absIsGreater(Fraction fractionTwo){
         //greater than

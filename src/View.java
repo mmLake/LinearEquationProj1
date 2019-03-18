@@ -12,6 +12,50 @@ public class View {
 
     private static Scanner sc = new Scanner(System.in);
 
+    public static double[][] readDoubleFile(){
+        FileReader fr;
+        BufferedReader br;
+        String val;
+        String strRow[];
+        ArrayList<Double> row;
+        double[][] matrixVals;
+
+        ArrayList<ArrayList<Double>> coefficients = new ArrayList<>();
+
+        try {
+            fr = new FileReader("./src/input");
+            br = new BufferedReader(fr);
+
+            while ((val = br.readLine()) != null){
+                row = new ArrayList<>();
+
+                strRow = val.split(" ");
+                for (String s : strRow){
+                    row.add(Double.parseDouble(s));
+                }
+
+                coefficients.add(row);
+            }
+
+            matrixVals = new double[coefficients.size()][coefficients.get(0).size()];
+
+            for (int rowIdx=0; rowIdx < matrixVals.length; rowIdx++){
+                for (int colIdx = 0; colIdx < matrixVals[0].length; colIdx++){
+                    matrixVals[rowIdx][colIdx] = coefficients.get(rowIdx).get(colIdx);
+                }
+            }
+
+            return matrixVals;
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
     public static Matrix readFile(){
         FileReader fr;
         BufferedReader br;
