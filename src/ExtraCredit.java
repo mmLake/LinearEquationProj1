@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -44,18 +45,20 @@ public class ExtraCredit {
             for (int copyIdx=0; copyIdx < arraySize; copyIdx++)
                 matrixValsCopy[copyIdx] = Arrays.copyOf(matrixVals[copyIdx], arraySize+1);
 
-//            timeSpent = System.nanoTime();
-//            Methods.jacobiIterative(matrixValsCopy, 0.4);
-//            timeSpent = System.nanoTime() - timeSpent;
-//
-//            System.out.printf("JACOBI: Time in ns for array of size %d is %d\n", arraySize, timeSpent);
-//
-//            //run gaus seidel
-//            timeSpent = System.nanoTime();
-//            Methods.gaussSeidel(matrixVals, 0.4);
-//            timeSpent = System.nanoTime() - timeSpent;
-//
-//            System.out.printf("GAUSS SEIDEL: Time in ns for array of size %d is %d\n", arraySize, timeSpent);
+            timeSpent = System.nanoTime();
+            Methods.jacobiIterative(matrixVals, 0.04);
+//            Methods.jacobiIterative(View.readDoubleFile(new File("./src/input")), 0.04);
+            timeSpent = System.nanoTime() - timeSpent;
+
+            System.out.printf("JACOBI: Time in ns for array of size %d is %d\n", arraySize, timeSpent);
+
+            //run gaus seidel
+            timeSpent = System.nanoTime();
+//            Methods.gaussSeidel(View.readDoubleFile(new File("./src/input")), 0.04);
+            Methods.gaussSeidel(matrixVals, 0.04);
+            timeSpent = System.nanoTime() - timeSpent;
+
+            System.out.printf("GAUSS SEIDEL: Time in ns for array of size %d is %d\n", arraySize, timeSpent);
 
             //run gaus elim
             timeSpent = System.nanoTime();

@@ -1,10 +1,11 @@
 public class Main {
 
     public static void main(String[] args) {
-        ExtraCredit.run();
-//        menuOptions();
-//        while (true)
-//            View.menu();
+        //To run extra credit, comment out print statements in Methods
+//        ExtraCredit.run();
+        menuOptions();
+        while (true)
+            View.menu();
 
     }
 

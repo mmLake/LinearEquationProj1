@@ -104,15 +104,17 @@ public class Methods {
         int p=2, size = x.length;
         double error = 0;
         double sum;
+        double powerOf;
 
         assert(size == y.length);
 
         for (int i=0; i<size; i++){
             sum = x[i] - y[i];
-            sum = (sum > 0)? sum : -sum;
+            if (sum < 0)
+                sum *= -1;
             error += Math.pow(sum, p);
         }
-        error = Math.pow(error, 1./p);
+        error = Math.sqrt(error);
         return error;
     }
 
@@ -160,14 +162,13 @@ public class Methods {
             System.out.println(Arrays.toString(currentVals));
         }
 
-        System.out.println("IT " + count);
-
         for (int i=0; i < currentVals.length; i++)
             System.out.println("X"+i+": " + currentVals[i]);
     }
 
     public static void gaussSeidel(double[][] matrixVals, double error){
         double[] currentVals = new double[matrixVals.length];
+        double[] tempCurrentVals = new double[matrixVals.length];
         double[] bVals = new double[matrixVals.length];
         double[] divVals = new double[matrixVals.length];
         int count = 0;
@@ -190,6 +191,8 @@ public class Methods {
         //run algorithm
         while (count < MAX_ITERATIONS && err > error){
             for (int rowIdx=0; rowIdx<matrixVals.length; rowIdx++){
+
+                tempCurrentVals = Arrays.copyOf(currentVals, currentVals.length);
                 currentVals[rowIdx] = bVals[rowIdx];
 
                 for (int colIdx=0; colIdx<matrixVals.length; colIdx++){
@@ -201,10 +204,12 @@ public class Methods {
                 currentVals[rowIdx] /= divVals[rowIdx];
             }
 
+            err = getError(tempCurrentVals, currentVals);
+
             count++;
             System.out.println(Arrays.toString(currentVals));
         }
-
+        
         //print final answer
         for (int i=0; i < currentVals.length; i++)
             System.out.println("X"+i+": " + currentVals[i]);

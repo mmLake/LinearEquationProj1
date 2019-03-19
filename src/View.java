@@ -124,14 +124,14 @@ public class View {
         return file;
     }
 
-    private static int getError(){
+    private static double getError(){
 
         System.out.print("Enter the error value for Jacobi and Gaus-Seidel: ");
-        while (!sc.hasNextInt()){
-            System.out.printf("\nMust enter an integer value: ");
+        while (!sc.hasNextDouble()){
+            System.out.printf("\nMust enter a double value: ");
             sc.next();
         }
-        return sc.nextInt();
+        return sc.nextDouble();
     }
 
     private static int getMenuOption(){
@@ -154,7 +154,7 @@ public class View {
 
     public static void menu(){
         int option = getMenuOption();
-        int error = -1;
+        double error = -1;
 
         switch (option){
             case 1:
