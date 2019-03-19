@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
  * Created by mayalake on 3/10/19.
  */
 public class Methods {
+    private final static int MAX_ITERATIONS = 50;
 
     public static void gaussElimPartialPivot(Matrix matrix) {
         List<Integer> availableIdx;
@@ -17,6 +18,7 @@ public class Methods {
         Fraction[] maxVals = new Fraction[matrix.getNumRows()];
 
         Arrays.setAll(maxVals, i -> new Fraction(Integer.MIN_VALUE, 1));
+
         availableIdx = IntStream.range(0, matrix.getNumRows()).boxed().collect(Collectors.toList());
 
         //find largest value in each row & populate maxVals
@@ -27,7 +29,7 @@ public class Methods {
             for (int i=0; i < matrixVals.length; i++){
                 val = row[i];
 
-                if (val.absIsGreater(maxVals[rowIdx]))
+                if (val.absIsGreater(maxVals[rowIdx]) && val.numerator!=0)
                     maxVals[rowIdx] = val;
             }
             rowIdx++;
@@ -79,7 +81,7 @@ public class Methods {
     }
 
     private static int getPivotIdx(Fraction[][] matrixVals, int i, Fraction[] maxVals, List<Integer> availableIdx){
-        Fraction maxPivotVal = new Fraction(1, 1000);
+        Fraction maxPivotVal = new Fraction(0, 100000);
         Fraction tempPivotVal;
         int pivotIdx = -1;
         Fraction[] row;
@@ -98,14 +100,33 @@ public class Methods {
         return pivotIdx;
     }
 
-    public static void jacobiIterative(double[][] matrixVals, int max){
+    private static double getError(double[] x, double[] y){
+        int p=2, size = x.length;
+        double error = 0;
+        double sum;
+
+        assert(size == y.length);
+
+        for (int i=0; i<size; i++){
+            sum = x[i] - y[i];
+            sum = (sum > 0)? sum : -sum;
+            error += Math.pow(sum, p);
+        }
+        error = Math.pow(error, 1./p);
+        return error;
+    }
+
+    public static void jacobiIterative(double[][] matrixVals, double error){
         double[] currentVals = new double[matrixVals.length];
         double[] tempCurrentVals = new double[matrixVals.length];
         double[] bVals = new double[matrixVals.length];
         double[] divVals = new double[matrixVals.length];
+        int count = 0;
+        double err = 1;
 
         //start with solution (0,0,...0)
         Arrays.setAll(currentVals, i -> 0);
+        Arrays.setAll(tempCurrentVals, i -> 0);
 
         //put matrix in diagonally dominant state
         matrixVals = diagonallyDominant(matrixVals);
@@ -119,7 +140,7 @@ public class Methods {
             divVals[i] = matrixVals[i][i];
 
         //run algorithm
-        while (max >=0){
+        while (count < MAX_ITERATIONS && err > error){
             for (int rowIdx=0; rowIdx<matrixVals.length; rowIdx++){
                 tempCurrentVals[rowIdx] = bVals[rowIdx];
 
@@ -131,17 +152,26 @@ public class Methods {
 
                 tempCurrentVals[rowIdx] /= divVals[rowIdx];
             }
+
+            err = getError(tempCurrentVals, currentVals);
             currentVals = Arrays.copyOf(tempCurrentVals, tempCurrentVals.length);
 
-            max--;
+            count++;
             System.out.println(Arrays.toString(currentVals));
         }
+
+        System.out.println("IT " + count);
+
+        for (int i=0; i < currentVals.length; i++)
+            System.out.println("X"+i+": " + currentVals[i]);
     }
 
-    public static void gaussSeidel(double[][] matrixVals, int max){
+    public static void gaussSeidel(double[][] matrixVals, double error){
         double[] currentVals = new double[matrixVals.length];
         double[] bVals = new double[matrixVals.length];
         double[] divVals = new double[matrixVals.length];
+        int count = 0;
+        double err = 1;
 
         //start with solution (0,0,...0)
         Arrays.setAll(currentVals, i -> 0);
@@ -158,7 +188,7 @@ public class Methods {
             divVals[i] = matrixVals[i][i];
 
         //run algorithm
-        while (max >=0){
+        while (count < MAX_ITERATIONS && err > error){
             for (int rowIdx=0; rowIdx<matrixVals.length; rowIdx++){
                 currentVals[rowIdx] = bVals[rowIdx];
 
@@ -171,9 +201,13 @@ public class Methods {
                 currentVals[rowIdx] /= divVals[rowIdx];
             }
 
-            max--;
+            count++;
             System.out.println(Arrays.toString(currentVals));
         }
+
+        //print final answer
+        for (int i=0; i < currentVals.length; i++)
+            System.out.println("X"+i+": " + currentVals[i]);
     }
 
     private static double[][] diagonallyDominant(double[][] matrix){

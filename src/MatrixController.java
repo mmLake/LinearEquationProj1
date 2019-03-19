@@ -36,6 +36,9 @@ public class MatrixController {
             finalAns[i] = b;
         }
 
-        System.out.println(Arrays.toString(finalAns));
+        for (int i=0; i < finalAns.length; i++)
+            System.out.println("X"+i+": " + finalAns[i]);
     }
+
+
 }

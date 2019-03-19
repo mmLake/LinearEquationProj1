@@ -164,6 +164,7 @@ public class View {
                 System.out.printf("\n*************************\n%s\n*************************\n","Gaus Elim Partial Pivot");
                 Matrix mFraction = convertDoubleToFraction(m);
                 Methods.gaussElimPartialPivot(mFraction);
+                MatrixController.computeFinalVals(mFraction);
 
                 //get values needed for jacobi and gaus-seidel
                 error = getError();
@@ -181,6 +182,7 @@ public class View {
                 System.out.printf("\n*************************\n%s\n*************************\n","Gaus Elim Partial Pivot");
                 Matrix m2Fraction = convertDoubleToFraction(m2);
                 Methods.gaussElimPartialPivot(m2Fraction);
+                MatrixController.computeFinalVals(m2Fraction);
 
                 //get values needed for jacobi and gaus-seidel
                 error = getError();
